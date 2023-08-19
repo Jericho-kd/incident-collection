@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, validator
 
 
-
 router = APIRouter()
 
 class Problem(BaseModel):
@@ -34,21 +33,11 @@ async def create_problem(problem: Problem) -> dict[str, str|Problem]:
 async def find_problems(query: dict[str, str]):
     results = []
 
-    # Ищем записи, удовлетворяющие запросу
-    # for item in database:
-    #     if query.items() <= item["header"].items() or query.items() <= item["body"].items():
-    #         results.append(item)
-
     return results
 
 
 @router.get("/find2")
 async def find_problems_by_hash(h: int):
     results = []
-
-    # Ищем записи с указанным хэшем
-    # for item in database:
-    #     if item["hash"] == h:
-    #         results.append(item)
 
     return results
