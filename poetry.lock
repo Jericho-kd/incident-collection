@@ -35,18 +35,6 @@ test = ["anyio[trio]", "coverage[toml] (>=4.5)", "hypothesis (>=4.0)", "mock (>=
 trio = ["trio (<0.22)"]
 
 [[package]]
-name = "bencode-py"
-version = "4.0.0"
-description = "Simple bencode parser (for Python 2, Python 3 and PyPy)"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "bencode.py-4.0.0-py2.py3-none-any.whl", hash = "sha256:99c06a55764e85ffe81622fdf9ee78bd737bad3ea61d119784a54bb28860d962"},
-    {file = "bencode.py-4.0.0.tar.gz", hash = "sha256:2a24ccda1725a51a650893d0b63260138359eaa299bb6e7a09961350a2a6e05c"},
-]
-
-[[package]]
 name = "click"
 version = "8.1.7"
 description = "Composable command line interface toolkit"
@@ -499,4 +487,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "cf6493b75ba34df468c19636d94747087a0a05b5f36eb4eeefc5d20ec17cc186"
+content-hash = "bd3f652cafd314b8577aa3dbfd44f501ab601bf6a3ef56056e4c47b0ab03fb9f"
