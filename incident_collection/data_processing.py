@@ -7,6 +7,15 @@ from models import Body, Problem, Response
 
 
 def compute_hash(body: Body, request: Request) -> str:
+    """Compute the hash of the entry
+
+    Args:
+        body (Body): Instance of Body class to extract data from
+        request (Request): Request to extract headers data from
+    Returns:
+        str: Computed hash value
+    """
+
     problem: Problem = request_to_problem(body, request)
 
     data_hash = hashlib.sha256(problem.model_dump_json().encode()).hexdigest()
@@ -17,6 +26,15 @@ def compute_hash(body: Body, request: Request) -> str:
 
 
 def request_to_problem(body: Body, request: Request) -> Problem:
+    """Convert request to Problem class instance
+
+    Args:
+        body (Body): Instance of Body class to extract data from
+        request (Request): Request to extract headers data from
+    Returns:
+        Problem: Instance of Problem class to insert into database
+    """
+
     h: list[dict[str, str]] = []
     b: list[dict[str, str]] = []
 
@@ -30,10 +48,24 @@ def request_to_problem(body: Body, request: Request) -> Problem:
 
 
 def insert_data(problem: Problem) -> None:
+    """Insert a single document to database
+
+    Args:
+        problem (Problem): Instance of Problem class to insert into database
+    """
+
     collection.insert_one(problem.model_dump())
 
 
 def find_data(query: dict[str, str]) -> list[Response]:
+    """Find all entries in database by query
+
+    Args:
+        query (dict[str, str]): Collection of key:value data to find
+    Returns:
+        list[Response]: List of found entries 
+    """
+
     search_query: dict[str, list[Any]] = {"$and": []}
 
     for cnt in range(len(query)):
@@ -51,6 +83,14 @@ def find_data(query: dict[str, str]) -> list[Response]:
     
     
 def problem_to_response(list_of_answers: list[dict[str, str | list[dict[str, str]]]]) -> list[Response]:
+    """Convert instances of Problem class to Response class
+
+    Args:
+        list_of_answers (list[dict[str, str  |  list[dict[str, str]]]]): List of found entries
+    Returns:
+        list[Response]: List of converted data
+    """
+
     response: list[Response] = []
 
     for answer in list_of_answers:
@@ -61,7 +101,15 @@ def problem_to_response(list_of_answers: list[dict[str, str | list[dict[str, str
     return response
 
 
-def find_data_by_hash(hash_value: str) -> list[Response]:
+def find_entries_by_hash(hash_value: str) -> list[Response]:
+    """Find all entries in database by hash
+
+    Args:
+        hash_value (str): Hash value to find
+    Returns:
+        list[Response]: List of found entries
+    """
+
     answer = list(collection.find({"hash": hash_value}))
     result = problem_to_response(answer)
 

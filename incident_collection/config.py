@@ -1,11 +1,10 @@
-from dotenv import load_dotenv
-import os
+import dotenv
+from pathlib import Path
 
 
-load_dotenv()
+config_path = Path(__file__).resolve().parents[1]
+config_env = dotenv.dotenv_values(config_path / 'config.env')
 
-DB_HOST: str | None = os.environ.get("DB_HOST")
-DB_PORT: str | None = os.environ.get("DB_PORT")
-DB_NAME: str | None = os.environ.get("DB_NAME")
-# DB_USER: str | None = os.environ.get("DB_USER")
-# DB_PASS: str | None = os.environ.get("DB_PASS")
+DB_HOST = config_env.get('DB_HOST')
+DB_PORT = config_env.get('DB_PORT')
+DB_NAME = config_env.get('DB_NAME')
