@@ -23,9 +23,8 @@ def request_to_problem(body: Body, request: Request) -> Problem:
     for header in sorted(request.headers.items()):
         h.append({"key": header[0], "value": header[1]})
 
-    for element in sorted(body.model_dump().values()):
-        for key, value in sorted(element.items()):
-            b.append({"key": key, "value": value})
+    for key, value in sorted(body.model_dump()["body"].items()):
+        b.append({"key": key, "value": value})
 
     return Problem(header=h, body=b)
 
@@ -45,18 +44,25 @@ def find_data(query: dict[str, str]) -> list[Response]:
         search_query["$and"][cnt]["$or"].append({"header": {"$elemMatch": {"key": key, "value": value}}})
         search_query["$and"][cnt]["$or"].append({"body": {"$elemMatch": {"key": key, "value": value}}})
 
-    answers = list(collection.find(search_query))
-    
-    result = problem_to_response(answers)
+    answer = list(collection.find(search_query))
+    result = problem_to_response(answer)
+
     return result
     
     
-def problem_to_response(answers: list[dict[str, str | list[dict[str, str]]]]) -> list[Response]:
+def problem_to_response(list_of_answers: list[dict[str, str | list[dict[str, str]]]]) -> list[Response]:
     response: list[Response] = []
 
-    for answer in answers:
+    for answer in list_of_answers:
         h = {header_data['key']: header_data['value'] for header_data in answer['header']} # type: ignore
         b = {body_data['key']: body_data['value'] for body_data in answer['body']} # type: ignore
         response.append(Response(header=h, body=b))
     
     return response
+
+
+def find_data_by_hash(hash_value: str) -> list[Response]:
+    answer = list(collection.find({"hash": hash_value}))
+    result = problem_to_response(answer)
+
+    return result
