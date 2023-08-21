@@ -1,5 +1,6 @@
 import hashlib
 from fastapi import Request
+from typing import Any
 
 from database import collection
 from models import Body, Problem, Response
@@ -31,7 +32,31 @@ def request_to_problem(body: Body, request: Request) -> Problem:
 
 def insert_data(problem: Problem) -> None:
     collection.insert_one(problem.model_dump())
-    
 
+
+def find_data(query: dict[str, str]) -> list[Response]:
+    search_query: dict[str, list[Any]] = {"$and": []}
+
+    for cnt in range(len(query)):
+        search_query["$and"].append({"$or": []})
+        key = list(query.items())[cnt][0]
+        value = list(query.items())[cnt][1]
+        
+        search_query["$and"][cnt]["$or"].append({"header": {"$elemMatch": {"key": key, "value": value}}})
+        search_query["$and"][cnt]["$or"].append({"body": {"$elemMatch": {"key": key, "value": value}}})
+
+    answers = list(collection.find(search_query))
+    
+    result = problem_to_response(answers)
+    return result
     
     
+def problem_to_response(answers: list[dict[str, str | list[dict[str, str]]]]) -> list[Response]:
+    response: list[Response] = []
+
+    for answer in answers:
+        h = {header_data['key']: header_data['value'] for header_data in answer['header']} # type: ignore
+        b = {body_data['key']: body_data['value'] for body_data in answer['body']} # type: ignore
+        response.append(Response(header=h, body=b))
+    
+    return response

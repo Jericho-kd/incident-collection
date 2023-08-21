@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 
-from data_processing import compute_hash
-from models import Body
+from data_processing import compute_hash, find_data
+from models import Body, Response
 
 router = APIRouter()
    
@@ -14,8 +14,10 @@ async def create_problem(body: Body, request: Request) -> dict[str, str]:
 
 
 @router.post("/find")
-async def find_problems(query: dict[str, str]):
-    pass
+async def find_problems(query: dict[str, str]) -> dict[str, list[Response]]:
+    result = find_data(query)
+
+    return {"result": result}
 
 
 @router.get("/find2")
