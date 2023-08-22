@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from pymongo.collection import Collection
+
 from config import DB_HOST, DB_PORT, DB_NAME
 
 

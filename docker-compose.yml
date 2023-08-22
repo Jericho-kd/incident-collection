@@ -2,19 +2,20 @@ version: '3.1'
 
 services:
 
-  mongodb:
-    image: mongo
-    ports:
-      - '27017:27017'
-    restart: always
-
   app:
     build:
-      context: .
       dockerfile: Dockerfile
+      context: .
+    env_file:
+      - docker_config.env
     ports:
-      - 8080:8080
+      - "8989:8989"
     depends_on:
-      - mongodb
-    environment:
-      - MONGO_URL=mongodb://localhost:27017
+      - mongo
+
+  mongo:
+    image: mongo
+    env_file:
+      - docker_config.env
+    ports:
+      - "27017:27017"  
