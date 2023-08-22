@@ -4,7 +4,7 @@ from data_processing import compute_hash, find_data, find_entries_by_hash
 from models import Body, Response
 
 
-router = APIRouter()
+router = APIRouter(tags=["Items"])
    
 @router.post("/problems")
 async def create_problem(body: Body, request: Request) -> dict[str, str]:
